@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "Rp20bmK10YQTQuYKsWkuI"
+uri = "file://artifacts/fact-scanner/assets/images/icon.png"
+type = "image"
+title = "fact scanner app icon"

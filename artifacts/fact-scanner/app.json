@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "FactScan",
+    "slug": "fact-scanner",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "fact-scanner",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0A1628"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Usado para escanear artigos e documentos para verificação de fatos",
+        "NSPhotoLibraryUsageDescription": "Usado para selecionar imagens de artigos para verificação de fatos"
+      }
+    },
+    "android": {
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE"]
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png"
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "origin": "https://replit.com/"
+        }
+      ],
+      "expo-font",
+      "expo-web-browser",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Permite selecionar imagens para verificação de fatos",
+          "cameraPermission": "Permite tirar fotos de artigos para verificação de fatos"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permite usar a câmera para escanear QR codes e documentos"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

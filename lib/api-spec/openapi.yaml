@@ -1,0 +1,160 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: factcheck
+    description: Fact checking operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /fact-check:
+    post:
+      operationId: checkFact
+      tags: [factcheck]
+      summary: Check factual accuracy of text or image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FactCheckRequest"
+      responses:
+        "200":
+          description: Fact check result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FactCheckResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    FactCheckRequest:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Text content to fact-check
+        imageBase64:
+          type: string
+          description: Base64-encoded image of article/newspaper/document
+        mimeType:
+          type: string
+          description: MIME type of the image (e.g. image/jpeg)
+        url:
+          type: string
+          description: URL found in QR code or link to fact-check
+        mode:
+          type: string
+          enum: [auto, text, image, qr]
+          description: Scan mode
+      required:
+        - mode
+    FactCheckResult:
+      type: object
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Truthfulness score from 0 to 100
+        verdict:
+          type: string
+          description: Short verdict label
+        summary:
+          type: string
+          description: Brief summary of the content analyzed
+        reasoning:
+          type: string
+          description: Detailed explanation of the score and reasoning
+        claims:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClaimAnalysis"
+          description: Individual claims analyzed
+        sources:
+          type: array
+          items:
+            $ref: "#/components/schemas/FactSource"
+          description: Journalistic sources consulted
+        usedGrounding:
+          type: boolean
+          description: Whether live web search was used
+        analyzedAt:
+          type: string
+          format: date-time
+      required:
+        - score
+        - verdict
+        - summary
+        - reasoning
+        - claims
+        - sources
+        - usedGrounding
+        - analyzedAt
+    FactSource:
+      type: object
+      properties:
+        title:
+          type: string
+        domain:
+          type: string
+      required:
+        - title
+        - domain
+    ClaimAnalysis:
+      type: object
+      properties:
+        claim:
+          type: string
+        accurate:
+          type: boolean
+        explanation:
+          type: string
+      required:
+        - claim
+        - accurate
+        - explanation
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
